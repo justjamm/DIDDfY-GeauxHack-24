@@ -1,1 +1,1 @@
-# DIDDfY-GeauxHack-24
+# GeauxHack-24
