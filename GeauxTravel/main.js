@@ -63,32 +63,6 @@ window.listen = function(){
 }
 
 
-
-/*
-async function addCircleFeature(coordinates, description, category){
-  const circleFeature = new Feature({
-  geometry : new Point(coordinates), 
-  description: description,
-  })
-}
-*/
-
-
-
-//function to select coordinates
-/*window.handleMapClick = function(){
-  map.on('click', (event)=> {
-    const coordinate = toLonLat(event.coordinate);
-    selectedCoords.innerHTML = `Selected Coordinates: ${coordinate[0].toFixed(4)}, ${coordinate[1].toFixed(4)}`;
-
-    //stop listening for events immediately
-    map.un('click',handleMapClick);
-
-    //Return the coordinates as an array
-    lastSelected= coordinate;
-  });
-}*/
-
 // Set up vector source and layer for dots
 const vectorSource = new VectorSource();
 const vectorLayer = new VectorLayer({ source: vectorSource});
@@ -151,8 +125,6 @@ async function firebaseUpload(description) {
   const coordinates =  lastSelected
   console.log(lastSelected);
   
-  //const latitude = coordinates[1]
-  //const longitude = coordinates[0]
   
   try {
     await addDoc(collection(db, "Crimes"), {
@@ -178,16 +150,7 @@ async function loadCrimes(){
     
     const description = data.description;
     console.log(description, coordinates);
-    /*const circleFeature = new Feature({
-      geometry: new Point(coords),
-    });
-
     
-    [data.coordinates.longitude, data.coordinates.latitude]
-
-    vectorSource.addFeature(circleFeature);
-    console.log(`Loaded crimes: ${description}`);
-    */
    addCircleFeature(coordinates, description);
    console.log(`Loaded crimes: ${description}`);
    console.log(`loaded coordinates: ${coordinates}`)
@@ -280,19 +243,5 @@ window.showReport = function() {
 }
 view.centerOn( br, map.getSize(), [570,500]);
 
-/*
-const format = createStringXY(event.target.valueAsNumber);
-mousePositionControl.setCoordinateFormat(format);
-//document.getElementById("submit-button").addEventListener("click", handleClick);
-*/
 
-
-  
-/*
-function clickListener(){
-  document.addEventListener("click", loadCrimes())
-}
-document.getElementById("chooseLocation").addEventListener("click", clickListener()) 
-
-*/
-
+ 
