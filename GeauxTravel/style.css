@@ -13,6 +13,7 @@ body {
 } */
 @import "node_modules/ol/ol.css";
 
+
 html, body {
   margin: 0;
   padding: 0;
@@ -46,36 +47,60 @@ p {
   font-family: 'Poppins', sans-serif;
   display: flex;
   justify-content: left;
-  gap: 1em;
-  margin-left: 1vw;
+  gap: 0.3vw;
+  margin-left: 0.6vw;
 }
 
 input[type="number"], select, #submit-button, #reportButton {
   border-radius: 0.5vw;
   border: 0.05vw solid #ccc;
+  /*width: 90%;*/
 }
+
 input[type="button"] {
+  display: inline-block;
+  padding: 0.75em 1.5em;
+  font-size: 1rem;
   background-color: #007acc;
   color: #fff;
+  background: #007acc;
   border: none;
   cursor: pointer;
   transition: background-color 0.3s;
   border-radius: 0.5vw;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  
+  
 }
-
 input[type="button"]:hover {
   background-color: #005f99;
+  transform: translateY(-2px);
+}
+
+.select {
+  padding: 0.75em 1em;
+  font-size: 1rem;
+  color: #333;
+  background: #fff;
+  border: 1px solid #ccc; /* Border color */
+  border-radius: 0.5em; /* Rounded corners */
+  appearance: none; /* Remove default arrow */
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"%3E%3Cpath fill="%23999" d="M7 10l3 3 3-3H7z"/%3E%3C/svg%3E'); /* Custom arrow */
+  background-repeat: no-repeat;
+  background-position: right 1em center; /* Position of the arrow */
+  background-size: 0.5em; /* Size of the arrow */
+  transition: border-color 0.3s;
 }
 
 .map {
   width: 100vw;
-  height: 83vh;
+  height: 81vh;
 }
 
 .mouse-position {
   position: absolute;
   bottom: 1vh;
-  left: 0vw;
+  left: 0.8vw;
   background: #3b3b3b;
   padding: 1vw;
   z-index: 1000;
@@ -84,13 +109,12 @@ input[type="button"]:hover {
 
 .selected-mouse-position {
   position: absolute;
-  bottom: 8vh;
-  left: 0vw;
-  padding: 0.5vw;
+  padding: 1vh;
+  top: 18.5vh;
+  left: 46.25vw;
   z-index: 1000;
   background: #3b3b3b;
 }
-
 /*
 .location{
   position: absolute;
@@ -102,7 +126,7 @@ input[type="button"]:hover {
 }
 */
 #js-map {
-  margin-top: 1em;
+  margin-top: 1vh;
 }
 
 #reportCrime {
@@ -115,15 +139,15 @@ section ul {
   font-size: 0.8em;
   border: 0.06vw solid black;
   position: absolute;
-  top: 18vh;
-  right: 0vw;
-  padding: 0.5vw; 
+  top: 19vh;
+  right: 1vw;
+  padding: 0.5vw;
   background: #3b3b3b;
   z-index: 1000;
   opacity: 70%;
   list-style-type: none;
+  /*width: 90%;*/
 }
-
 section li:nth-child(1){
   color: rgb(232, 12, 12);
 }
@@ -131,7 +155,7 @@ section li:nth-child(2){
   color: rgb(221, 113, 238);
 }
 section li:nth-child(3){
-  color: yellow;
+  color: gold;
 }
 section li:nth-child(4){
   color: orange;
@@ -153,3 +177,44 @@ section li:nth-child(9){
 }
 
 
+@media (max-width: 600px) {
+  body {
+      font-size: 16px; /* Adjust font size for mobile */
+  }
+  .container {
+      padding: 10px; /* Less padding on mobile */
+  }
+  header {
+      padding: 2vh; /* More padding for touch */
+  }
+  h1 {
+      font-size: 2em; /* Adjust heading size for mobile */
+  }
+  p {
+      font-size: 1em; /* Adjust paragraph size for mobile */
+  }
+  .controls {
+    flex-direction: column;
+  }
+  section ul {
+ 
+    top: 30vh;
+    
+    width: 30vw;
+  }
+  input[type="number"], select, #submit-button, #reportButton {
+    
+    width: 35vw;
+  }
+  
+  input[type="button"] {
+    
+    width:35vw;
+    
+    
+  }
+  input[type="button"]:hover {
+    
+    width: 35vw;
+  }
+}

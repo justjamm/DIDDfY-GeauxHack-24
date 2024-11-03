@@ -22,7 +22,7 @@ const view = new View ({
   center: [0,0],
   zoom: 12,
   minZoom: 2,
-  maxZoom: 18,
+  maxZoom: 16,
   zoomduration: 500
 });
 
@@ -53,13 +53,18 @@ function handleMapClick(event){
     return;
   }
   selectedCoords.innerHTML = `Selected Coordinates: ${coordinate[0].toFixed(4)}, ${coordinate[1].toFixed(4)}`;
-
+  
   lastSelected = coordinate;
+  const button = document.getElementById("chooseLocation");
+  button.style.backgroundColor = "#007acc";
   map.un('click',handleMapClick);
   
 }
 window.listen = function(){
+  const button = document.getElementById("chooseLocation");
+  button.style.backgroundColor = "yellow";
   map.on('click', handleMapClick);
+  
 }
 
 
@@ -77,40 +82,40 @@ async function addCircleFeature(coordinates, description) {
   });
   console.log(`addCircle ${coordinates}`);
   console.log(`turn those coords to nonlonlat ${fromLonLat(coordinates)}`);
-  var color = null;
+  var color = 'rgba(0, 0, 0, 0.5)';
   var colorSelect = description;
   switch(colorSelect){
     case "Robbery":
-      color = "rgb(232, 12, 12)";
+      color = "rgba(232, 12, 12, 0.5)";
       break;
     case "CarRobbery":
-      color = "rgb(221, 113, 238)";
+      color = "rgba(221, 113, 238, 0.5)";
       break;
     case "Kidnapping":
-      color = "yellow";
+      color = "rgba(255, 215, 0, 0.5)";
       break;
     case "Vandalism":
-      color = "orange";
+      color = "rgba(255, 165, 0, 0.5)";
       break;
     case "Assault":
-      color = "pink";
+      color = "rgba(255, 192, 203, 0.5)";
       break;
     case "Accident/HitandRun":
-      color = "rgb(74, 146, 255)";
+      color = "rgba(74, 146, 255, 0.5)";
       break;            
     case "SuspiciousActivities":
-      color = "aqua";   
+      color = "rgba(0, 255, 255, 0.5)";   
       break;
     case "FraudulentActivity":
-      color = "rgb(13, 211, 13)";
+      color = "rgba(13, 211, 13, 0.5)";
       break;
     default:
-      color = "black";       
+      color = "rgba(0, 0, 0, 0.5)";       
   }
     circleFeature.setStyle(
       new Style({
         image: new CircleStyle({
-          radius: 10,
+          radius: 7,
           fill: new Fill({ color: color}),
           stroke: new Stroke({ color: color, width: 2}),
         }),

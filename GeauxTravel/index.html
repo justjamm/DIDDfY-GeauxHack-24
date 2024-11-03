@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TravelTuah</title>
+    <title>TouristShield</title>
     <link rel="stylesheet" href="node_modules/ol/ol.css">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
@@ -14,13 +15,14 @@
     
     
     <header>
-      <h1>TRAVEL TUAH</h1>
+      <h1>TouristShield</h1>
     </header>
     
     
     <div class="controls">
       <select id="cities" onchange="fillInput();">
-        <option></option>
+        <!--<option></option>-->
+        <option disabled selected>City</option>
         <option value="Atyrau">Atyrau</option>
         <option value="BatonRouge">Baton Rouge</option>
         <option value="Berlin">Berlin</option>
@@ -37,18 +39,20 @@
       
         <input id="reportButton" type="button" value="Show Report Menu" onclick="showReport();"/>
         <div id = "reportCrime">
-          <select id="crimeSelect">
-            <option></option>
-            <option value="Robbery">Roberry</option>
+          <div class="selected-mouse-position" id="selected-mouse-position" >Selected Mouse Position: </div>
+          <select id="crimeSelect" onchange="fillInput();">
+            <option disabled selected>Crime</option> 
+            <option value="Robbery">Robbery</option>
             <option value="CarRobbery">Car Robbery</option>
             <option value="Kidnapping">Kidnapping</option>
-            <option value="Assault">Assault</option>
-            <option value="FraudulentActivity">Fraudulent Activity</option>
-            <option value="SuspiciousActivities">Suspicious Activities</option>
             <option value="Vandalism">Vandalism</option>
+            <option value="Assault">Assault</option>
+            <option value="Accident/HitandRun">Accident or Hit and Run</option>
+            <option value="SuspiciousActivities">Suspicious Activities</option>
+            <option value="FraudulentActivity">Fraudulent Activity</option>
           </select>
-          <input id="chooseLocation" type="button" value="Set Location" onclick="listen();"/>
-          <input id="submitReport" type="button" value="Submit Report" onclick="submitCrime();"/>
+          <input id="chooseLocation" type="button" value="Set Location" onclick="listen();" accesskey="A"/>
+          <input id="submitReport" type="button" value="Submit Report" onclick="submitCrime();" accesskey="S"/>
         </div>
     </div>
     
@@ -69,7 +73,6 @@
     </section>
 
     <div class="mousePositions">
-      <div class="selected-mouse-position" id="selected-mouse-position">Selected Mouse Position: </div>
       <div class="mouse-position" id="mouse-position">Mouse Position: </div>
     </div>
 
