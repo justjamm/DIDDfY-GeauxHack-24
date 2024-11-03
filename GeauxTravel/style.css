@@ -17,6 +17,7 @@ body {
 html, body {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
   color: #f4f4f9;
   background-color: #3b3b3b;
@@ -58,6 +59,7 @@ input[type="number"], select, #submit-button, #reportButton {
 }
 
 input[type="button"] {
+  align-items: center;
   display: inline-block;
   padding: 0.75em 1.5em;
   font-size: 1rem;
@@ -78,8 +80,9 @@ input[type="button"]:hover {
 }
 
 .select {
+  font-family: 'Poppins', sans-serif;
   padding: 0.75em 1em;
-  font-size: 1rem;
+  font-size: 10rem;
   color: #333;
   background: #fff;
   border: 1px solid #ccc; /* Border color */
@@ -109,9 +112,9 @@ input[type="button"]:hover {
 
 .selected-mouse-position {
   position: absolute;
-  padding: 1vh;
-  top: 18.5vh;
-  left: 46.25vw;
+  padding: 1vw;
+  top: 0%;
+  left: 0%;
   z-index: 1000;
   background: #3b3b3b;
 }
@@ -139,8 +142,8 @@ section ul {
   font-size: 0.8em;
   border: 0.06vw solid black;
   position: absolute;
-  top: 19vh;
-  right: 1vw;
+  bottom: 0%;
+  right: 0%;
   padding: 0.5vw;
   background: #3b3b3b;
   z-index: 1000;
@@ -149,10 +152,10 @@ section ul {
   /*width: 90%;*/
 }
 section li:nth-child(1){
-  color: rgb(232, 12, 12);
+  color: rgb(255, 64, 64);
 }
 section li:nth-child(2){
-  color: rgb(221, 113, 238);
+  color: rgb(165, 149, 255);
 }
 section li:nth-child(3){
   color: gold;
@@ -161,7 +164,7 @@ section li:nth-child(4){
   color: orange;
 }
 section li:nth-child(5){
-  color:pink;
+  color: rgb(225, 0, 255);
 }
 section li:nth-child(6){
   color:rgb(74, 146, 255);
@@ -173,7 +176,7 @@ section li:nth-child(8){
   color: rgb(13, 211, 13);
 }
 section li:nth-child(9){
-  color: black;
+  color: rgb(194, 191, 191);
 }
 
 
@@ -198,9 +201,9 @@ section li:nth-child(9){
   }
   section ul {
  
-    top: 30vh;
-    
-    width: 30vw;
+    top: 37vh;
+    right: 0vw;
+    width: 40vw;
   }
   input[type="number"], select, #submit-button, #reportButton {
     
@@ -208,9 +211,11 @@ section li:nth-child(9){
   }
   
   input[type="button"] {
-    
-    width:35vw;
-    
+    align-items: center;
+    width:40vw;
+    font-size: 1em;
+    padding: 1vh;
+    padding-top: 2vh;
     
   }
   input[type="button"]:hover {

@@ -82,14 +82,14 @@ async function addCircleFeature(coordinates, description) {
   });
   console.log(`addCircle ${coordinates}`);
   console.log(`turn those coords to nonlonlat ${fromLonLat(coordinates)}`);
-  var color = 'rgba(0, 0, 0, 0.5)';
+  var color = "rgba(0, 0, 0, 0.5)";
   var colorSelect = description;
   switch(colorSelect){
     case "Robbery":
       color = "rgba(232, 12, 12, 0.5)";
       break;
     case "CarRobbery":
-      color = "rgba(221, 113, 238, 0.5)";
+      color = "rgba(123, 104, 238, 0.5)";
       break;
     case "Kidnapping":
       color = "rgba(255, 215, 0, 0.5)";
@@ -98,7 +98,7 @@ async function addCircleFeature(coordinates, description) {
       color = "rgba(255, 165, 0, 0.5)";
       break;
     case "Assault":
-      color = "rgba(255, 192, 203, 0.5)";
+      color = "rgba(255, 0, 225, 0.5)";
       break;
     case "Accident/HitandRun":
       color = "rgba(74, 146, 255, 0.5)";

@@ -39,7 +39,6 @@
       
         <input id="reportButton" type="button" value="Show Report Menu" onclick="showReport();"/>
         <div id = "reportCrime">
-          <div class="selected-mouse-position" id="selected-mouse-position" >Selected Mouse Position: </div>
           <select id="crimeSelect" onchange="fillInput();">
             <option disabled selected>Crime</option> 
             <option value="Robbery">Robbery</option>
@@ -53,7 +52,9 @@
           </select>
           <input id="chooseLocation" type="button" value="Set Location" onclick="listen();" accesskey="A"/>
           <input id="submitReport" type="button" value="Submit Report" onclick="submitCrime();" accesskey="S"/>
+          <div class="selected-mouse-position" id="selected-mouse-position" >Selected Mouse Position: </div>
         </div>
+
     </div>
     
 
