@@ -1,19 +1,20 @@
 
 import Map from 'ol/Map.js';
-import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer/.js';
 import View from 'ol/View.js';
 import {OSM, Vector as VectorSource} from 'ol/source.js';
 import { fromLonLat } from 'ol/proj';
 import TileGrid from 'ol/tilegrid/TileGrid.js'; 
+import TileLayer from 'ol/layer/Tile.js';
 import {get as getProjection} from 'ol/proj.js';
 import VectorTileSource from 'ol/source/VectorTile.js';
 import {circular} from 'ol/geom/Polygon.js';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js';
 import{Draw, Modify, Snap} from 'ol/interaction.js';
 import {GeometryCollection, Point, Polygon} from 'ol/geom.js';
-import MousePosistion from 'ol/control/MousePosition.js';
+import MousePosition from 'ol/control/MousePosition.js';
+import {createStringXY} from 'ol/coordinate.js';
 import Source from 'ol/source/Vector.js';
-
+import {addCity} from './firebase.js';
 class CustomTileSource {
   getTile(z, x, y) {
     // Create a canvas for each tile
@@ -38,54 +39,80 @@ class CustomTileSource {
 }
 const br = fromLonLat([-91.1871, 30.4515]);
 
+/* Mouse position */
+const mousePositionControl = new MousePosition({
+  coordinateFormat: createStringXY(4),
+  className: 'mouse-position',
+  target: document.getElementById('mouse-position'),
+});
+
 const view = new View ({
   center: [0,0],
   zoom: 12,
-  minZoom: 12,
+  minZoom: 0,
   maxZoom: 18,
   zoomduration: 500
 });
-/*
-const mousePositionControl = new MousePosition({
-  coordinateFormat: createStringXY(4),
-  projection: 'EPSG:4326'
-})
-*/
+
 const map = new Map({
   layers: [
     new TileLayer({
-      source: new OSM(),
-    }),
-
-    
-  ],
+      source: new OSM,
+    }),],
   target: 'js-map',
   view: view,
 });
 
 
 
-/*
-const projectionSelect = document.getElementById('projection');
-projectionSelect.addEventListener('change', function (event) {
-  mousePositionControl.setProjection(event.target.value);
-});
 
-const precisionInput = document.getElementById('precision');
-precisionInput.addEventListener('change', function (event) {
-  const format = createStringXY(event.target.valueAsNumber);
-  mousePositionControl.setCoordinateFormat(format);
-});
-*/
+
+window.drawCircle = function(ctx, x, y, radius) {
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.fillStyle = 'blue';
+  ctx.fill();
+  ctx.stroke();
+};
+
+// Handle click event
+/*
 window.handleClick = function() {
   var lon = parseFloat(document.getElementById("lon").value);
   var lat = parseFloat(document.getElementById("lat").value);
-  console.log("handleclick worked");
+  console.log("handleClick worked");
+
+  
+
   if (!isNaN(lon) && !isNaN(lat)) {
-    view.animate({
-      center: fromLonLat([lon, lat]),
-      duration: 1000 
-    });
+      // Assuming a conversion to canvas coordinates; replace as needed
+      
+      const canvas = document.getElementById('myCanvas');
+      const ctx = canvas.getContext('2d');
+      
+      // Example conversion; you might need to adjust this based on your application's needs
+      const x = lon * 2; // Adjust scaling
+      const y = lat * 2; // Adjust scaling
+      
+      // Clear the canvas and draw the circle
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawCircle(ctx, 160, 240, 20); // Radius is 20 pixels
+  } else {
+      console.log("Invalid coordinates");
+  }
+};*/
+//document.getElementById('drawButton').addEventListener('click', handleClick);
+
+
+
+
+
+window.handleClick = function() {
+  var lon = parseFloat(document.getElementById("lon").value);
+  var lat = parseFloat(document.getElementById("lat").value);
+  console.log("handleClick worked");
+  if (!isNaN(lon) && !isNaN(lat)) {
+    view.animate({zoom: 2},{center: fromLonLat([lon, lat])}, {zoom: 12});
   } else {
     console.log("Invalid coordinates");
   }
@@ -138,4 +165,7 @@ circleFunction = function(circleCoord) {
   });
 
   map.addInteraction(draw);
+
+  //
 */
+addCity();

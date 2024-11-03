@@ -19,6 +19,9 @@ html, body {
   font-family: Arial, sans-serif;
   color: #f4f4f9;
   background-color: #3b3b3b;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
 header {
@@ -42,7 +45,7 @@ p {
 
 .controls {
   display: flex;
-  justify-content: center;
+  justify-content: left;
   gap: 1em;
   padding: 1em;
 }
@@ -67,7 +70,7 @@ input[type="button"]:hover {
 
 .map {
   width: 100vw;
-  height: 80vh;
+  height: 78vh;
   border-top: 1px solid #ccc;
 }
 
