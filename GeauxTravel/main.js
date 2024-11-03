@@ -1,60 +1,43 @@
-
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
 import {OSM, Vector as VectorSource} from 'ol/source.js';
-import { fromLonLat } from 'ol/proj';
+import { fromLonLat, toLonLat } from 'ol/proj';
 import TileGrid from 'ol/tilegrid/TileGrid.js'; 
 import TileLayer from 'ol/layer/Tile.js';
 import {get as getProjection} from 'ol/proj.js';
 import VectorTileSource from 'ol/source/VectorTile.js';
 import {circular} from 'ol/geom/Polygon.js';
-import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js';
+import {Fill, Icon, Stroke, Style, Circle as CircleStyle} from 'ol/style.js';
 import{Draw, Modify, Snap} from 'ol/interaction.js';
 import {GeometryCollection, Point, Polygon} from 'ol/geom.js';
 import MousePosition from 'ol/control/MousePosition.js';
 import {createStringXY} from 'ol/coordinate.js';
 import Source from 'ol/source/Vector.js';
-import {addCity} from './firebase.js';
-class CustomTileSource {
-  getTile(z, x, y) {
-    // Create a canvas for each tile
-    const canvas = document.createElement('canvas');
-    canvas.width = 256;
-    canvas.height = 256;
-    const context = canvas.getContext('2d');
+import { addCity} from './firebase.js';
+import Feature from 'ol/Feature.js';
+import {Vector as VectorLayer} from 'ol/layer.js';
+import {db} from './firebase.js';
+import {collection} from './firebase.js';
+import { addDoc } from './firebase.js';
+import { getDocs } from './firebase.js';
 
-    //Set the color based on tile coords
-    const color = this.getColorForTile(x, y);
-    context.fillStyle = color;
-    context.fillRect(0,0, canvas.width, canvas.height);
-    console.log("rendering {z} {x} {y}");
-    return canvas;
-  }
+/* Set initial view to Baton Rouge */
+const br = fromLonLat([-91.18, 30.41]);
 
-  //Function for color determination
-  getColorForTile(x,y) {
-    //Change color based on coords
-    return 'red';
-  }
-}
-const br = fromLonLat([-91.1871, 30.4515]);
 
-/* Mouse position */
-const mousePositionControl = new MousePosition({
-  coordinateFormat: createStringXY(4),
-  className: 'mouse-position',
-  target: document.getElementById('mouse-position'),
-});
 
+/* Establish screen user sees */
 const view = new View ({
   center: [0,0],
   zoom: 12,
-  minZoom: 0,
+  minZoom: 2,
   maxZoom: 18,
   zoomduration: 500
 });
 
+/* Build map */
 const map = new Map({
+  /*controls: defaultControls().extend([mousePositionControl]),*/
   layers: [
     new TileLayer({
       source: new OSM,
@@ -62,73 +45,222 @@ const map = new Map({
   target: 'js-map',
   view: view,
 });
+// mouse countrol vars
+const mousePosition = document.getElementById('mouse-position');
+const selectedCoords = document.getElementById('selected-mouse-position');
+
+map.on('pointermove', (event)=>{
+  const coordinate = toLonLat(event.coordinate);
+  mousePosition.innerHTML = `Mouse Position: ${coordinate[0].toFixed(4)}, ${coordinate[1].toFixed(4)}`;
+});
+//create null
+var lastSelected = null;
+
+function handleMapClick(event){
+  const coordinate = toLonLat(event.coordinate);
+  if (!coordinate) {
+    return;
+  }
+  selectedCoords.innerHTML = `Selected Coordinates: ${coordinate[0].toFixed(4)}, ${coordinate[1].toFixed(4)}`;
+
+  lastSelected = coordinate;
+  map.un('click',handleMapClick);
+  
+}
+window.listen = function(){
+  map.on('click', handleMapClick);
+}
 
 
 
-
-
-window.drawCircle = function(ctx, x, y, radius) {
-  ctx.beginPath();
-  ctx.arc(x, y, radius, 0, Math.PI * 2);
-  ctx.fillStyle = 'blue';
-  ctx.fill();
-  ctx.stroke();
-};
-
-// Handle click event
 /*
-window.handleClick = function() {
-  var lon = parseFloat(document.getElementById("lon").value);
-  var lat = parseFloat(document.getElementById("lat").value);
-  console.log("handleClick worked");
+async function addCircleFeature(coordinates, description, category){
+  const circleFeature = new Feature({
+  geometry : new Point(coordinates), 
+  description: description,
+  })
+}
+*/
+
+
+
+//function to select coordinates
+/*window.handleMapClick = function(){
+  map.on('click', (event)=> {
+    const coordinate = toLonLat(event.coordinate);
+    selectedCoords.innerHTML = `Selected Coordinates: ${coordinate[0].toFixed(4)}, ${coordinate[1].toFixed(4)}`;
+
+    //stop listening for events immediately
+    map.un('click',handleMapClick);
+
+    //Return the coordinates as an array
+    lastSelected= coordinate;
+  });
+}*/
+
+// Set up vector source and layer for dots
+const vectorSource = new VectorSource();
+const vectorLayer = new VectorLayer({ source: vectorSource});
+map.addLayer(vectorLayer);
+
+//Function to create and add a circle feature on the map and save to Firebase
+async function addCircleFeature(coordinates, description) {
+  const circleFeature = new Feature({
+    geometry: new Point(fromLonLat(coordinates)),
+    
+    description: description,
+  });
+  console.log(`addCircle ${coordinates}`);
+  console.log(`turn those coords to nonlonlat ${fromLonLat(coordinates)}`);
+  var color = null;
+  var colorSelect = description;
+  switch(colorSelect){
+    case "Robbery":
+      color = "rgb(232, 12, 12)";
+      break;
+    case "CarRobbery":
+      color = "rgb(221, 113, 238)";
+      break;
+    case "Kidnapping":
+      color = "yellow";
+      break;
+    case "Vandalism":
+      color = "orange";
+      break;
+    case "Assault":
+      color = "pink";
+      break;
+    case "Accident/HitandRun":
+      color = "rgb(74, 146, 255)";
+      break;            
+    case "SuspiciousActivities":
+      color = "aqua";   
+      break;
+    case "FraudulentActivity":
+      color = "rgb(13, 211, 13)";
+      break;
+    default:
+      color = "black";       
+  }
+    circleFeature.setStyle(
+      new Style({
+        image: new CircleStyle({
+          radius: 10,
+          fill: new Fill({ color: color}),
+          stroke: new Stroke({ color: color, width: 2}),
+        }),
+      })
+    );
+
+  vectorSource.addFeature(circleFeature);
 
   
+}
+async function firebaseUpload(description) {
+  const coordinates =  lastSelected
+  console.log(lastSelected);
+  
+  //const latitude = coordinates[1]
+  //const longitude = coordinates[0]
+  
+  try {
+    await addDoc(collection(db, "Crimes"), {
+      description: description,
+      coordinates: coordinates,
 
-  if (!isNaN(lon) && !isNaN(lat)) {
-      // Assuming a conversion to canvas coordinates; replace as needed
-      
-      const canvas = document.getElementById('myCanvas');
-      const ctx = canvas.getContext('2d');
-      
-      // Example conversion; you might need to adjust this based on your application's needs
-      const x = lon * 2; // Adjust scaling
-      const y = lat * 2; // Adjust scaling
-      
-      // Clear the canvas and draw the circle
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawCircle(ctx, 160, 240, 20); // Radius is 20 pixels
-  } else {
-      console.log("Invalid coordinates");
+    });
+    console.log(`Crime added to Firebase:`, description);
+
+  } catch (e) {
+    console.error("Error adding crime :(");
   }
-};*/
-//document.getElementById('drawButton').addEventListener('click', handleClick);
+}
 
 
+// Load crimes from Firebase on map load
+async function loadCrimes(){
+  const querySnap = await getDocs(collection(db, "Crimes"));
 
+  querySnap.forEach((doc) => {
+    const data /* object */= doc.data();
+    const coordinates /* array */ = data.coordinates;
+    
+    const description = data.description;
+    console.log(description, coordinates);
+    /*const circleFeature = new Feature({
+      geometry: new Point(coords),
+    });
 
+    
+    [data.coordinates.longitude, data.coordinates.latitude]
+
+    vectorSource.addFeature(circleFeature);
+    console.log(`Loaded crimes: ${description}`);
+    */
+   addCircleFeature(coordinates, description);
+   console.log(`Loaded crimes: ${description}`);
+   console.log(`loaded coordinates: ${coordinates}`)
+
+  });
+}
+loadCrimes();
+
+/* Functionaly to Go! button */
 
 window.handleClick = function() {
   var lon = parseFloat(document.getElementById("lon").value);
   var lat = parseFloat(document.getElementById("lat").value);
   console.log("handleClick worked");
   if (!isNaN(lon) && !isNaN(lat)) {
-    view.animate({zoom: 2},{center: fromLonLat([lon, lat])}, {zoom: 12});
+    view.animate({zoom: 2}, {center: fromLonLat([lon, lat])}, {zoom: 12});
   } else {
     console.log("Invalid coordinates");
   }
 };
 
-/* coord hardcode */
+window.getDescription = function(){
+  const selectedCrime = document.getElementById("crimeSelect").value;
+  return selectedCrime;
+}
+
+
+window.submitCrime = function(){
+  console.log(lastSelected);
+  console.log(getDescription());
+  
+  try{
+    firebaseUpload(getDescription());
+    addCircleFeature(lastSelected,getDescription());
+  } catch (e) {
+    console.error("failed to add");
+    }
+  
+}
+
+
+
+/* Functionality to dropdown menu */
 window.fillInput = function()  {
-  const dropdown = document.getElementById("cities");
-  const selectedCity = dropdown.value;
+  const selectedCity = document.getElementById("cities").value;
   const lon = document.getElementById("lon");
   const lat = document.getElementById("lat");
 
   /* Hardcode of city coordinates */
-  if (selectedCity == "BatonRouge") {
+  if (selectedCity == "Atyrau") {
+    lon.value = 51.9238;
+    lat.value = 47.0945;
+  }
+  else if (selectedCity == "BatonRouge") {
     lon.value = -91.1871;
     lat.value = 30.4515;
+  }
+  else if (selectedCity == "Berlin") {
+    lon.value = 13.405;
+    lat.value = 52.52;
+  }
+  else if (selectedCity == "Lagos") {
+    lon.value = 3.3792;
+    lat.value = 6.5244;
   }
   else if (selectedCity == "London") {
     lon.value = -0.1276;
@@ -144,28 +276,32 @@ window.fillInput = function()  {
   }
 }
 
-//document.getElementById("submit-button").addEventListener("click", handleClick);
-view.centerOn( br, map.getSize(), [570,500]);
- 
-
-/*const raster = new TileLayer({
-  source: new OSM(),
-}) 
-
-let draw;
-circleFunction = function(circleCoord) {
-  const center = coordinates[0];
-  const last = coordinates[coordinates.length-1];
-  const radius = 20
+window.showReport = function() {
+  const report = document.getElementById("reportCrime");
+  if (report.style.display === "none") {
+    report.style.display = "flex";  
+    document.getElementById("reportButton").value = "Hide Report Menu";
+  }
+  else {
+    report.style.display = "none";
+    document.getElementById("reportButton").value = "Show Report Menu";
+  }
 }
-  draw = new Draw({
-    source: source,
-    type: 'Circle',
-    geometryFunction: circleFunction
-  });
+view.centerOn( br, map.getSize(), [570,500]);
 
-  map.addInteraction(draw);
-
-  //
+/*
+const format = createStringXY(event.target.valueAsNumber);
+mousePositionControl.setCoordinateFormat(format);
+//document.getElementById("submit-button").addEventListener("click", handleClick);
 */
-addCity();
+
+
+  
+/*
+function clickListener(){
+  document.addEventListener("click", loadCrimes())
+}
+document.getElementById("chooseLocation").addEventListener("click", clickListener()) 
+
+*/
+

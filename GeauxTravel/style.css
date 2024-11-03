@@ -16,7 +16,7 @@ body {
 html, body {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Poppins', sans-serif;
   color: #f4f4f9;
   background-color: #3b3b3b;
   height: 100vh;
@@ -26,13 +26,12 @@ html, body {
 
 header {
   text-align: center;
-  background-color: #3b3b6a;
+  background-color: #3b3b3b;
   color: #fff;
-  padding: 1em;
+  padding: 0.1vh;
 }
 
 h1 {
-  font-family: 'Poppins', sans-serif;
   font-size: 2.5em;
   margin: 0.5em 0;
 }
@@ -44,24 +43,24 @@ p {
 }
 
 .controls {
+  font-family: 'Poppins', sans-serif;
   display: flex;
   justify-content: left;
   gap: 1em;
-  padding: 1em;
+  margin-left: 1vw;
 }
 
-input[type="number"], select, #submit-button {
-  padding: 0.5em;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+input[type="number"], select, #submit-button, #reportButton {
+  border-radius: 0.5vw;
+  border: 0.05vw solid #ccc;
 }
-
 input[type="button"] {
   background-color: #007acc;
   color: #fff;
   border: none;
   cursor: pointer;
   transition: background-color 0.3s;
+  border-radius: 0.5vw;
 }
 
 input[type="button"]:hover {
@@ -70,13 +69,84 @@ input[type="button"]:hover {
 
 .map {
   width: 100vw;
-  height: 78vh;
-  border-top: 1px solid #ccc;
+  height: 83vh;
+}
+
+.mouse-position {
+  position: absolute;
+  bottom: 1vh;
+  left: 0vw;
+  background: #3b3b3b;
+  padding: 1vw;
+  z-index: 1000;
 }
 
 
+.selected-mouse-position {
+  position: absolute;
+  bottom: 8vh;
+  left: 0vw;
+  padding: 0.5vw;
+  z-index: 1000;
+  background: #3b3b3b;
+}
 
+/*
+.location{
+  position: absolute;
+  top: 16.5vh;
+  right: 0vw;
+  padding: 0.5vw;
+  z-index: 1000;
+  
+}
+*/
 #js-map {
   margin-top: 1em;
 }
+
+#reportCrime {
+  display: none;
+  gap: 0.5em;
+}
+
+section ul {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.8em;
+  border: 0.06vw solid black;
+  position: absolute;
+  top: 18vh;
+  right: 0vw;
+  padding: 0.5vw; 
+  background: #3b3b3b;
+  z-index: 1000;
+  opacity: 70%;
+  list-style-type: none;
+}
+
+section li:nth-child(1){
+  color: rgb(232, 12, 12);
+}
+section li:nth-child(2){
+  color: rgb(221, 113, 238);
+}
+section li:nth-child(3){
+  color: yellow;
+}
+section li:nth-child(4){
+  color: orange;
+}
+section li:nth-child(5){
+  color:pink;
+}
+section li:nth-child(6){
+  color:rgb(74, 146, 255);
+}
+section li:nth-child(7){
+  color:aqua;
+}
+section li:nth-child(8){
+  color: rgb(13, 211, 13);
+}
+
 
